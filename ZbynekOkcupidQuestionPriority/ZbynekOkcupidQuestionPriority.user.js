@@ -12,7 +12,7 @@
 // @updateURL   https://raw.githubusercontent.com/kvr000/zbynek-okcupid-util/master/ZbynekOkcupidQuestionFilter/ZbynekOkcupidQuestionFilter.user.js
 // @supportURL  https://github.com/kvr000/zbynek-okcupid-util/issues/
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=J778VRUGJRZRG&item_name=Support+features+development.&currency_code=CAD&source=url
-// @version     1.0.0
+// @version     1.0.1
 // @grant       GM_log
 // @grant       GM_addStyle
 // @grant       GM_setClipboard
@@ -716,10 +716,10 @@
 				try {
 					this.settingsDb.import(input.value);
 					this.reloadQuestionPriorities();
-					const questions = this.dwrapper.listXpath("./*[contains(concat(' ', @class, ' '), ' profile-question ') and not contains(concat(' ', @class, ' '), ' isLoading ')]", this.questionsEl);
+					const questions = this.dwrapper.listXpath("./*[contains(concat(' ', @class, ' '), ' profile-question ') and not (contains(concat(' ', @class, ' '), ' isLoading '))]", this.questionsEl);
 					for (let i = 0; i < questions.length; ++i) {
-						let questionEl = questions[i];
-						let extensionButton = this.dwrapper.findXpathNode("./button[@class = 'zbynek-okcupid-questions-priority-button']", questionEl);
+						const questionEl = questions[i];
+						const extensionButton = this.dwrapper.findXpathNode("./button[@class = 'zbynek-okcupid-questions-priority-button']", questionEl);
 						if (extensionButton) {
 							extensionButton.remove();
 						}
@@ -727,6 +727,7 @@
 					this.updateQuestions();
 				}
 				catch (err) {
+					console.error(err);
 					alert("Failed to parse data from clipboard, please make sure you copied preference dump correctly: "+err);
 				}
 				dialog.style.display = 'none';
